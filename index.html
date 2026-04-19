@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
+            color: #333;
             font-family: 'Segoe UI','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
@@ -19,7 +20,7 @@
             align-items:center;
             max-width: 800px;
             padding: 10px 20px;
-            margin: 0 auto  20px auto;
+            margin: 0 auto 20px auto;
             border-radius:10px;
             justify-content: space-between;
         }
@@ -47,7 +48,7 @@
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background-color: #4CAF50;
+            background-color: #008b8b;
             color: white;
             width: 50px;
             height: 50px;
@@ -58,15 +59,17 @@
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        button{
+        button {
             padding: 10px 20px;
-            cursor: pointer; 
+            cursor: pointer;
             background: none;
-            border: none;
+            border: 1px;
+            border-radius: 10px;
             transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         button:hover{
-            background-color: #eee;
+            background-color: #e4e6eb;
             border-radius: 5px;
         }
         .login-container {                  
@@ -75,22 +78,37 @@
             justify-content: center;
             min-height: 60vh;
         }
+        .input-login{
+            width: 100%;
+            padding:12px;
+            margin: 8px 0 15px 0;
+            border: 1px
+            solid #ddd;
+            border-radius: 8px;
+            box-sizing:border-box;
+            background-color: #fafafa;
+        }
+        .input-login:focus{
+            border-color: #00ced1;
+            outline: none;
+        }
     </style>
 </head>
 <body>
     <div align="center">
+        <div align="right">
+            <button onclick="showPage('account-page')">
+                <i class="fa-solid fa-user"></i>
+            </button>
+        </div>
         <h1>SÁCH TỐT GIÁ RẺ 3 ANH TÀI</h1>
         <h3 align="center">Chào mừng bạn đến với tiệm sách!</h3>
     </div>
     <div id="home-page" class="content-box">
         <div class="header-container">
-            <button onclick="showPage('home-page')">
                 <i class="fa-solid fa-house-chimney"></i>
-            </button>
-            <div>
-                <button onclick="showPage('account-page')">
-                    <i class="fa-solid fa-user"></i>
-                </button>
+            <div style="display:flex;">
+               
                 <button onclick="showPage('search-page')">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
@@ -103,17 +121,19 @@
     <div id="account-page" class="content-box hidden login">
         <div class="login-container">
             <form>
-                <fieldset>
-                    <h2 aligin="center" style="margin-top: 0; color: #333;">Đăng nhập/Đăng ký</h2>
-                    <label>Email</label><br />
-                    <input type="email" id="email" name="email_khach" placeholder="example@st.tvu.edu.vn" required /><br />
-                    <label>Mật khẩu</label><br />
-                    <input type="password" id="matkhau" required /><br />
+                <h2 align="center" style="margin-top: 0; color: #333;">Đăng nhập/Đăng ký</h2>
+                <fieldset style="background: white; border: none; border-radius: 15px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">                  
+                    <label style="font-weight: bold;">Email</label><br />
+                    <input type="email" id="email" class="input-login" placeholder="example@email.com" required /><br />
+                    <label style="font-weight: bold;">Mật khẩu</label><br />
+                    <input type="password" id="matkhau" class="input-login" required /><br />
                     <br />
                     <label><i>bạn chưa có tài khoản!</i></label><br />
-                    <a href="test.html" target="_blank">tạo tài khoản?</a><br /><br />
+                    <a href="test.html" target="_blank" style="color: #008b8b; text-decoration: none; font-size: 14px; ">tạo tài khoản?</a>
+                    <br />
+                    <br />
                     <div align="center">
-                        <button type="submit" onclick="saveData(event)">đăng nhập  </button>
+                        <button type="submit" class="btn-nav" style="width: 100%; background-color: #008b8b; color: white; padding: 10px; border-radius: 5px; " onclick="saveData(event)">ĐĂNG NHẬP  </button>
                     </div>
                 </fieldset>
             </form>
@@ -125,7 +145,9 @@
     <div id="search-page" class="content-box hidden">
         <div class="search-full-width">
             <input type="text" id="searchInput" placeholder="Nhập tên sách em guộc ơi..." style="padding: 10px; width: 80%;" />
-            <i class="fa-solid fa-magnifying-glass" style="color: #888;"></i>
+            <button onclick="performSearch()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
         </div>
         <div class="back-button" onclick="showPage('home-page')">
             <i class="fa-solid fa-arrow-left"></i>
@@ -169,7 +191,7 @@
      let matkhauDaluu = localStorage.getItem("matkhau");
      if (emailDangnhap === emailDaluu && matkhauDangnhap === matkhauDaluu) {
          alert("Đăng nhập thành công!");
-         window.location.href = "trangchinh.html";
+         showPage('home-page');
 
      }
      else {
