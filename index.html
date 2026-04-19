@@ -103,18 +103,18 @@
         </div>
         <h1>SÁCH TỐT GIÁ RẺ 3 ANH TÀI</h1>
         <h3 align="center">Chào mừng bạn đến với tiệm sách!</h3>
-    </div>
-    <div id="home-page" class="content-box">
-        <div class="header-container">
+        <div>
+            <div class="header-container">
                 <i class="fa-solid fa-house-chimney"></i>
-            <div style="display:flex;">
-               
-                <button onclick="showPage('search-page')">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-                <button onclick="showPage('cart-page')">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                </button>
+                <div style="display:flex;">
+
+                    <button onclick="showPage('search-page')">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <button onclick="showPage('cart-page')">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -162,6 +162,17 @@
             <i class="fa-solid fa-arrow-left"></i>
         </div>
     </div>
+    <table>
+        <tr>
+            <th><button>Trang chủ</button></th>
+            <th><button>Thể loại</button></th>
+            <th><button>Bán chạy</button></th>
+            <th><button>Sách mới</button></th>
+            <th><button>Khuyến mãi</button></th>
+            <th><button>Tin tức</button></th>
+            <th><button>Liên hệ</button></th>
+        </tr>
+    </table>
     <script>
         function showPage(pageId) {
             let allPages = document.querySelectorAll('.content-box');
