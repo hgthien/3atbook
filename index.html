@@ -11,7 +11,14 @@
             color: #333;
             font-family: 'Segoe UI','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 5px;
+        }
+        header {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: #f0f2f5;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header-container {
@@ -160,6 +167,7 @@
             margin-right: 20px;
             cursor: pointer;
         }
+
         .book-card {
             text-align: center;
             padding: 15px;
@@ -186,6 +194,30 @@
             font-weight: bold;
             color: #333;
             margin: 5px 0;
+        }
+
+        nav {
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .navbar {
+            position: relative;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 60px;
+            border: 0.5px solid #ccc;
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            width: fit-content;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: 0.3s;
         }
     </style>
 </head>
@@ -216,25 +248,27 @@
                 </div>
             </div>
             <hr />
-            <div>
-                <table style="width:auto;">
-                    <tr>
-                        <th><button onclick="showPage('home-page')">Trang chủ</button></th>
-                        <th><button a href="#sachmoi">Sách mới</button></th>
-                        <th><button a href="#theloai">Thể loại</button></th>
-                        <th><button>Bán chạy</button></th>
-                        <th><button>Khuyến mãi</button></th>
-                        <th><button>Tin tức</button></th>
-                        <th><button>Liên hệ</button></th>
-                    </tr>
-                </table>
-            </div>
+            <nav>
+                <div>
+                    <div align="center">
+                        <ul class="navbar">
+                            <li><a href="#" onclick="showPage('home-page')">Trang chủ</a></li>
+                            <li><a href="#sachmoi">Sách mới</a></li>
+                            <li><a href="#theloai">Thể loại</a></li>
+                            <li>Bán chạy</li>
+                            <li>Khuyến mãi</li>
+                            <li>Tin tức</li>
+                            <li>Liên hệ</li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </header>
-        <div>
+        <div style="padding: 10px;">
             <h3>sách mới được thêm vào gần đây</h3>
             <a href="#sachmoi"></a>
             <table class="table-container">
-                <tr>
+                <tr >
                     <th>
                         <div class="book-card">
                             <img src="https://marketplace.canva.com/EAD5DLrZ1DE/1/0/1024w/canva-xanh-m%C3%B2ng-k%C3%A9t-v%C3%A0-h%E1%BB%93ng-b%C3%A1nh-donut-th%E1%BB%A9c-%C4%83n-nh%E1%BA%ADt-k%C3%BD-s%C3%A1ch-b%C3%ACa-Zlr77mT-27w.jpg" />
@@ -247,15 +281,49 @@
                             <div class="book-title">Harry Potter và Bảo Bối Tử Thần</div>
                         </div>
                     </th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th>
+                        <div class="book-card">
+                            <img src="https://marketplace.canva.com/EAD5HAtO1ec/1/0/1003w/canva-v%C3%A0ng-n%C3%A2u-chim-h%C3%ACnh-minh-h%E1%BB%8Da-nh%E1%BB%8F-b%C3%A9-tr%E1%BA%BB-em-s%C3%A1ch-b%C3%ACa-cptvdrYhx3Y.jpg" />
+                            <div class="book-title">chú chim tí hon</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="book-card">
+                            <img src="https://cdn2.tuoitre.vn/thumb_w/730/471584752817336320/2024/1/12/ttctso214-1p33ab-17050432862411016551117.jpg" />
+                            <div class="book-title">Việt Nam Sử Lược</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="book-card">
+                            <img src="https://marketplace.canva.com/EAD46HNrYBs/1/0/1003w/canva-an-%E1%BB%A7i-l%C3%A3ng-m%E1%BA%A1n-s%C3%A1ch-b%C3%ACa-naZIEWMJArU.jpg" />
+                            <div class="book-title">Hãy Nhớ Tên Anh Ấy</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="book-card">
+                            <img src="https://images.tuyensinh247.com/picture/images_question/1664871886-pxlm.jpg" />
+                            <div class="book-title">Hoàng Tử Bé</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="book-card">
+                            <img src="https://marketplace.canva.com/EAD479TtFJc/1/0/1003w/canva-%C4%91en-%E1%BA%A3nh-n%C3%A2ng-l%C3%AAn-b%C3%ACa-s%C3%A1ch-eNGqNf1VzO0.jpg" />
+                            <div class="book-title">Phía trên Những ngọn cây</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="book-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST0kxN6T39KunuTr4N-BCxo1V5-W55tNUImw&s" />
+                            <div class="book-title">Tôi thấy hoa vàng trên cỏ xanh</div>
+                        </div>
+                    </th>
                     <th></th>
                 </tr>
             </table>
+            <div >
+                <h3></h3>
+                <a href="#theloai">thể loại</a>
+            </div>
         </div>
     </div>
 
@@ -406,8 +474,8 @@
             let emailDangnhap = document.getElementById("user-email").value;
             let matkhauDangnhap = document.getElementById("user-matkhau").value;
             // Lấy giá trị ĐÃ LƯU lúc đăng ký (Key phải khớp với hàm Registr bên dưới)
-            let emailDaluu = localStorage.getItem("email");
-            let matkhauDaluu = localStorage.getItem("matkhau");
+            let emailDaluu = localStorage.getItem("reg-email");
+            let matkhauDaluu = localStorage.getItem("reg-matkhau");
             if (emailDangnhap === emailDaluu && matkhauDangnhap === matkhauDaluu) {
                 alert("Đăng nhập thành công!");
                 isLoggedIn = true;
