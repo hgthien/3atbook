@@ -1,531 +1,675 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title>trang chính</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3ATBook - Hệ Thống Hoàn Thiện</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f0f2f5;
-            color: #333;
-            font-family: 'Segoe UI','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 5px;
+        /* --- 1. BIẾN MÀU SẮC VÀ THIẾT LẬP CHUNG --- */
+        :root {
+            --primary: #008b8b;
+            --secondary: #007070;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --white: #ffffff;
+            --gray: #64748b;
         }
-        header {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        /* Cấu trúc Flexbox để Footer luôn dính sát đáy trang khi nội dung ít */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
+            color: var(--text);
+        }
+
+        .main-wrapper {
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- 2. THANH ĐIỀU HƯỚNG (HEADER & NAV) --- */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .header-container {
-            background-color: white;
-            border: 1px solid #ccc;
+        .header-main {
             display: flex;
             align-items: center;
-            max-width: 800px;
-            padding: 10px 20px;
-            margin: 0 auto 20px auto;
-            border-radius: 10px;
             justify-content: space-between;
+            padding: 15px 0;
         }
 
-        .table-container {
-            background-color: white;
-            border: 1px solid #ccc;
-            max-width: 800px;
-            padding: 10px 20px;
-            margin: 0 auto 20px 0;
-            border-radius: 10px;
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
         }
 
-            .table-container th {
-                padding-right: 15px;
-                text-align: left;
-            }
-
-        .search-full-width {
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+        .header-actions {
             display: flex;
-            align-items: center;
-            max-width: 600px;
-            padding: 10px 20px;
-            margin: 0 auto 20px auto;
+            gap: 15px;
         }
 
-            .search-full-width input {
-                flex: 1;
+            .header-actions button {
+                background: #f3f4f6;
                 border: none;
-                outline: none;
-                padding: 10px;
-                font-size: 16px;
+                font-size: 18px;
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                position: relative;
+                transition: 0.3s;
             }
 
-        .hidden {
-            display: none;
-        }
-
-        .back-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background-color: #008b8b;
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
             color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-            background: none;
-            border: 1px;
+            font-size: 10px;
+            padding: 2px 6px;
             border-radius: 10px;
-            transition: 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-            button:hover {
-                background-color: #e4e6eb;
-                border-radius: 5px;
-            }
+        /* Thanh tìm kiếm ẩn hiện */
+        #search-overlay {
+            display: none;
+            background: white;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
 
-        .login-container {
+        .search-inner {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 60vh;
         }
 
-        .input-login {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0 15px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            background-color: #fafafa;
-        }
-
-            .input-login:focus {
-                border-color: #00ced1;
+            .search-inner input {
+                width: 100%;
+                padding: 12px 50px 12px 20px;
+                border: 2px solid var(--primary);
+                border-radius: 30px;
                 outline: none;
             }
 
-        .reg-label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-            color: #555;
-        }
-
-        input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            margin-bottom: 10px;
-        }
-
-        .gender-container {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            margin: 5px 0 15px 0;
-        }
-
-        .gender-item {
-            margin-right: 25px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-            .gender-item input {
-                margin-right: 8px;
-                width: auto;
+            .search-inner i {
+                position: absolute;
+                right: 20px;
+                color: var(--primary);
             }
-
-        .gender-container input {
-            margin-right: 5px;
-            cursor: pointer;
-        }
-
-        .gender-container label {
-            margin-right: 20px;
-            cursor: pointer;
-        }
-
-        .book-card {
-            text-align: center;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            transition: 0.3s;
-        }
-
-            .book-card:hover {
-                transform: translateY(-5px);
-            }
-
-            .book-card img {
-                width: 140px;
-                height: 200px;
-                object-fit: cover;
-                border-radius: 5px;
-                margin-bottom: 10px;
-            }
-
-        .book-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-            margin: 5px 0;
-        }
 
         nav {
-            border-top: 1px solid #e2e8f0;
+            background: white;
+            border-top: 1px solid #f3f4f6;
         }
 
-        .navbar {
-            position: relative;
-            padding: 15px 20px;
-            background: white;
-            border-radius: 60px;
-            border: 0.5px solid #ccc;
+        .nav-menu {
             display: flex;
             list-style: none;
             gap: 30px;
-            width: fit-content;
-            flex-wrap: nowrap;
-            white-space: nowrap;
+            padding: 12px 0;
+            justify-content: center;
         }
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
+
+            .nav-menu a {
+                text-decoration: none;
+                color: var(--text);
+                font-weight: 500;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+        /* --- 3. ĐỊNH DẠNG CÁC PHẦN NỘI DUNG (SECTIONS) --- */
+        .page-section {
+            padding: 40px 0;
+        }
+
+        .section-box {
+            padding: 50px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+            .section-header h2 {
+                font-size: 26px;
+                position: relative;
+                display: inline-block;
+                padding-bottom: 10px;
+            }
+
+                .section-header h2::after {
+                    content: '';
+                    width: 50px;
+                    height: 3px;
+                    background: var(--primary);
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+        /* Lưới hiển thị sách */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
             transition: 0.3s;
+        }
+
+            .book-card img {
+                width: 100%;
+                height: 230px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-bottom: 12px;
+            }
+
+        .book-title {
+            font-weight: 600;
+            font-size: 14px;
+            height: 40px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .book-price {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        /* Lưới thể loại */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+        }
+
+        .category-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #eee;
+            transition: 0.3s;
+        }
+
+            .category-item:hover {
+                background: var(--primary);
+                color: white;
+            }
+
+        /* --- 4. FORM ĐĂNG NHẬP / ĐĂNG KÝ --- */
+        .auth-container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+                color: var(--text);
+                font-size: 14px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                outline: none;
+                font-size: 15px;
+            }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: var(--gray);
+        }
+
+        /* --- 5. GIỎ HÀNG (SHOPPING CART) --- */
+        .cart-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+            .cart-row img {
+                width: 60px;
+                height: 85px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            background: #1e2937;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="home-page" class="content-box">
-        <header>
-            <div align="right">
-                <button onclick="showPage('account-page')">
-                    <i class="fa-solid fa-user"></i>
-                </button>
-            </div>
-            <div align="center">
-                <h1><i class="fa-solid fa-book"></i>3ATBook</h1>
-            </div>
-            <h3 align="center">Chào mừng bạn đến với tiệm sách!</h3>
-            <div>
-                <div class="header-container">
-                    <i class="fa-solid fa-house-chimney"></i>
-                    <div style="display:flex;">
 
-                        <button onclick="showPage('search-page')">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+    <div class="main-wrapper">
+        <header>
+            <div class="container">
+                <div class="header-main">
+                    <a onclick="resetHome()" class="logo"><i class="fas fa-book-open"></i> 3ATBook</a>
+                    <div class="header-actions">
+                        <button onclick="toggleSearchBar()"><i class="fas fa-search"></i></button>
+                        <button onclick="showAuthPage()"><i class="fas fa-user"></i></button>
                         <button onclick="showPage('cart-page')">
-                            <i class="fa-solid fa-cart-shopping"></i>
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-badge" id="cartCount">0</span>
                         </button>
                     </div>
                 </div>
             </div>
-            <hr />
-            <nav>
-                <div>
-                    <div align="center">
-                        <ul class="navbar">
-                            <li><a href="#" onclick="showPage('home-page')">Trang chủ</a></li>
-                            <li><a href="#sachmoi">Sách mới</a></li>
-                            <li><a href="#theloai">Thể loại</a></li>
-                            <li>Bán chạy</li>
-                            <li>Khuyến mãi</li>
-                            <li>Tin tức</li>
-                            <li>Liên hệ</li>
-                        </ul>
+            <div id="search-overlay">
+                <div class="container">
+                    <div class="search-inner">
+                        <input type="text" id="liveSearch" placeholder="Tìm tên sách..." oninput="handleLiveSearch(this.value)">
+                        <i class="fas fa-search"></i>
                     </div>
+                </div>
+            </div>
+            <nav>
+                <div class="container">
+                    <ul class="nav-menu">
+                        <li><a onclick="resetHome()">Trang chủ</a></li>
+                        <li><a onclick="navToSection('sach-moi')">Sách mới</a></li>
+                        <li><a onclick="navToSection('ban-chay')">Bán chạy</a></li>
+                        <li><a onclick="navToSection('the-loai-section')">Thể loại</a></li>
+                        <li><a onclick="navToSection('gop-y')">Góp ý</a></li>
+                    </ul>
                 </div>
             </nav>
         </header>
-        <div style="padding: 10px;">
-            <h3>sách mới được thêm vào gần đây</h3>
-            <a href="#sachmoi"></a>
-            <table class="table-container">
-                <tr >
-                    <th>
-                        <div class="book-card">
-                            <img src="https://marketplace.canva.com/EAD5DLrZ1DE/1/0/1024w/canva-xanh-m%C3%B2ng-k%C3%A9t-v%C3%A0-h%E1%BB%93ng-b%C3%A1nh-donut-th%E1%BB%A9c-%C4%83n-nh%E1%BA%ADt-k%C3%BD-s%C3%A1ch-b%C3%ACa-Zlr77mT-27w.jpg" />
-                            <div class="book-title">Nhập ký thức ăn</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvs-dmZnbL-2wgx3MMJYeISinumkrLC2JAVg&s" />
-                            <div class="book-title">Harry Potter và Bảo Bối Tử Thần</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://marketplace.canva.com/EAD5HAtO1ec/1/0/1003w/canva-v%C3%A0ng-n%C3%A2u-chim-h%C3%ACnh-minh-h%E1%BB%8Da-nh%E1%BB%8F-b%C3%A9-tr%E1%BA%BB-em-s%C3%A1ch-b%C3%ACa-cptvdrYhx3Y.jpg" />
-                            <div class="book-title">chú chim tí hon</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://cdn2.tuoitre.vn/thumb_w/730/471584752817336320/2024/1/12/ttctso214-1p33ab-17050432862411016551117.jpg" />
-                            <div class="book-title">Việt Nam Sử Lược</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://marketplace.canva.com/EAD46HNrYBs/1/0/1003w/canva-an-%E1%BB%A7i-l%C3%A3ng-m%E1%BA%A1n-s%C3%A1ch-b%C3%ACa-naZIEWMJArU.jpg" />
-                            <div class="book-title">Hãy Nhớ Tên Anh Ấy</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://images.tuyensinh247.com/picture/images_question/1664871886-pxlm.jpg" />
-                            <div class="book-title">Hoàng Tử Bé</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://marketplace.canva.com/EAD479TtFJc/1/0/1003w/canva-%C4%91en-%E1%BA%A3nh-n%C3%A2ng-l%C3%AAn-b%C3%ACa-s%C3%A1ch-eNGqNf1VzO0.jpg" />
-                            <div class="book-title">Phía trên Những ngọn cây</div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="book-card">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST0kxN6T39KunuTr4N-BCxo1V5-W55tNUImw&s" />
-                            <div class="book-title">Tôi thấy hoa vàng trên cỏ xanh</div>
-                        </div>
-                    </th>
-                    <th></th>
-                </tr>
-            </table>
-            <div >
-                <h3></h3>
-                <a href="#theloai">thể loại</a>
-            </div>
-        </div>
-    </div>
 
-    <div id="account-page" class="content-box hidden login">
-        <div class="login-container">
-            <div id="login-section">
-                <form>
-                    <h2 align="center" style="margin-top: 0; color: #333;">Đăng nhập/Đăng ký</h2>
-                    <fieldset style="background: white; border: none; border-radius: 15px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-                        <label style="font-weight: bold;">Email</label><br />
-                        <input type="email" id="user-email" class="input-login" placeholder="example@email.com" required /><br />
-                        <label style="font-weight: bold;">Mật khẩu</label><br />
-                        <input type="password" id="user-matkhau" class="input-login" required /><br />
-                        <br />
-                        <label><i>bạn chưa có tài khoản!</i></label><br />
-                        <a href="javascript:void(0)" onclick="toggleAuth('register')" style="color: #008b8b; text-decoration: none; font-size: 14px; ">tạo tài khoản?</a>
-                        <br />
-                        <br />
-                        <div align="center">
-                            <button type="submit" class="btn-nav" style="width: 100%; background-color: #008b8b; color: white; padding: 10px; border-radius: 5px; " onclick="Login(event)">ĐĂNG NHẬP  </button>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <form id="register-section" class="hidden">
-                <div align="center">
-                    <h2>Vui Lòng Nhập Thông Tin </h2>
+        <main id="home-page" class="page-section">
+            <section id="sach-moi" class="section-box">
+                <div class="container">
+                    <div class="section-header"><h2>Sách Mới Cập Nhật</h2></div>
+                    <div class="books-grid" id="newBooksGrid"></div>
                 </div>
-                <div class="login login-container">
-                    <fieldset style="background: white; border: none; border-radius: 15px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-                        <div align="left">
-                            <label class="reg-label">Họ và Tên:</label><br />
-                            <input type="text" id="hoten" class="input-login" required /><br />
-
-                            <label class="reg-label">Mã số sinh viên</label><br />
-                            <input type="text" id="mssv" class="input-login" required /><br />
-
-                            <label class="reg-label">Giới Tính </label><br />
-                            <div class="gender-container">
-                                <div class="gender-item">
-                                    <input type="radio" name="gioitinh" value="Nam" checked /><label for="nam">Nam</label><br />
-                                    <input type="radio" name="gioitinh" value="Nu" /><label for="nu">Nữ</label><br />
-                                </div>
-                            </div>
-                            <label class="reg-label">Ngày Sinh</label><br />
-                            <input type="date" id="ngaysinh" required /><br />
-
-                            <label class="reg-label">Email</label><br />
-                            <input type="email" id="email" name="email_khach" class="input-login" placeholder="example@email.com" required /><br />
-
-                            <label class="reg-label">Mật khẩu</label><br />
-                            <input type="password" id="matkhau" class="input-login" required /><br />
-                            <label class="reg-label">Vui lòng nhập lại mật khẩu</label><br />
-                            <input type="password" id="matkhau1" class="input-login" required /><br />
-
-                            <br />
-                            <div align="center">
-                                <button type="submit" class="btn-nav" style="width: 100%; background-color: #008b8b; color: white; padding: 12px; border-radius: 8px;" onclick="Register(event)">Lưu thông tin  </button>
-                            </div>
-                        </div>
-                    </fieldset>
+            </section>
+            <section id="ban-chay" class="section-box bg-white">
+                <div class="container">
+                    <div class="section-header"><h2>Sách Bán Chạy</h2></div>
+                    <div class="books-grid" id="hotBooksGrid"></div>
                 </div>
-            </form>
-            <div id="profile-section" class="hidden">
-                <div align="center">
-                    <h2 style="color: #008b8b;"><i class="fa-solid fa-id-card"></i>Hồ Sơ Cá Nhân</h2>
-                    <fieldset style="background: white; border: none; border-radius: 15px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px; text-align: left;">
-                        <p><strong>Họ Tên:</strong><span id="prof-hoten"></span></p>
-                        <p><strong>MSSV:</strong><span id="prof-mssv"></span></p>
-                        <p><strong>Ngày sinh:</strong><span id="prof-ngaysinh"></span></p>
-                        <p><strong>Email:</strong><span id="prof-email"></span></p>
-                        <br />
-                        <button onclick="Logout()" style="width: 100%; background-color: #008b8b; color: white;">ĐĂNG XUẤT</button>
-                    </fieldset>
+            </section>
+            <section id="the-loai-section" class="section-box bg-light">
+                <div class="container">
+                    <div class="section-header"><h2>Khám Phá Thể Loại</h2></div>
+                    <div class="category-grid">
+                        <div class="category-item" onclick="filterByGenre('Kỹ năng')">Kỹ năng</div>
+                        <div class="category-item" onclick="filterByGenre('Fantasy')">Fantasy</div>
+                        <div class="category-item" onclick="filterByGenre('Thiếu nhi')">Thiếu nhi</div>
+                        <div class="category-item" onclick="filterByGenre('Văn học')">Văn học</div>
+                    </div>
+                </div>
+            </section>
+            <section id="gop-y" class="section-box bg-white">
+                <div class="container" style="max-width: 600px; text-align: center;">
+                    <div class="section-header"><h2>Góp Ý Hệ Thống</h2></div>
+                    <textarea id="gopy-text" placeholder="Nhập ý kiến của bạn..." style="width: 100%; height: 100px; padding: 15px; border-radius: 10px; border: 1px solid #ddd; outline: none;"></textarea>
+                    <button class="btn-add" style="width: auto; padding: 10px 40px; margin-top: 10px;" onclick="sendGopY()">Gửi góp ý</button>
+                </div>
+            </section>
+        </main>
+
+        <main id="search-page" class="page-section hidden container">
+            <div class="section-header"><h2 id="searchTitle">Kết quả tìm kiếm</h2></div>
+            <div class="books-grid" id="searchBooksGrid"></div>
+        </main>
+
+        <main id="account-page" class="page-section hidden container">
+            <div id="login-section" class="auth-container">
+                <h2 align="center">Đăng Nhập</h2><br>
+                <div class="form-group">
+                    <label>Tài khoản Email</label>
+                    <input type="email" id="login-email">
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" id="login-pass">
+                </div>
+                <button class="btn-auth" style="background:var(--primary); color:white;" onclick="handleLogin()">ĐĂNG NHẬP</button>
+                <button class="btn-auth btn-back" onclick="resetHome()">Quay về Trang chủ</button>
+                <p style="text-align:center; margin-top:15px;">Chưa có tài khoản? <a href="javascript:void(0)" onclick="toggleAuth('register')">Đăng ký ngay</a></p>
+            </div>
+
+            <div id="register-section" class="auth-container hidden">
+                <h2 align="center">Đăng Ký Thành Viên</h2><br>
+                <div class="form-group"><label>Họ và Tên</label><input type="text" id="reg-name"></div>
+                <div class="form-group"><label>Địa chỉ Email</label><input type="email" id="reg-email"></div>
+                <div class="form-group"><label>Mật khẩu</label><input type="password" id="reg-pass"></div>
+                <div class="form-group"><label>Nhập lại mật khẩu</label><input type="password" id="reg-pass-confirm"></div>
+                <button class="btn-auth" style="background:var(--primary); color:white;" onclick="handleRegister()">ĐĂNG KÝ</button>
+                <button class="btn-auth btn-back" onclick="resetHome()">Quay về Trang chủ</button>
+                <p style="text-align:center; margin-top:15px;"><a href="javascript:void(0)" onclick="toggleAuth('login')">Quay lại Đăng nhập</a></p>
+            </div>
+
+            <div id="profile-section" class="auth-container hidden">
+                <h2 align="center">Hồ Sơ Cá Nhân</h2>
+                <div style="margin:25px 0; line-height:2.5; text-align: left; font-size: 16px;">
+                    <p><strong>Họ Tên:</strong> <span id="prof-name"></span></p>
+                    <p><strong>Email:</strong> <span id="prof-email"></span></p>
+                </div>
+                <button class="btn-auth" style="background:#ef4444; color:white;" onclick="handleLogout()">ĐĂNG XUẤT</button>
+                <button class="btn-auth btn-back" onclick="resetHome()">Quay về Trang chủ</button>
+            </div>
+        </main>
+
+        <main id="cart-page" class="page-section hidden container">
+            <div style="background:white; padding:35px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+                <h2 style="text-align: left;"><i class="fas fa-shopping-cart"></i> Giỏ hàng của bạn</h2><br>
+                <div id="cartList"></div>
+                <div id="cartTotal" style="text-align:right; margin-top:25px; font-size:24px; font-weight:bold; color:var(--primary);"></div>
+                <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px;">
+                    <button class="btn-auth btn-back" style="width: auto; padding: 12px 30px;" onclick="resetHome()">Tiếp tục mua sách</button>
+                    <button class="btn-auth" style="background:var(--accent); color:white; width:auto; padding:12px 50px;" onclick="processPayment()">THANH TOÁN</button>
                 </div>
             </div>
-        </div>
-        <div class="back-button" onclick="showPage('home-page')">
-            <i class="fa-solid fa-arrow-left"></i>
-        </div>
+        </main>
     </div>
-    <div id="search-page" class="content-box hidden">
-        <div class="search-full-width">
-            <input type="text" id="searchInput" placeholder="Nhập tên sách em guộc ơi..." style="padding: 10px; width: 80%;" />
-            <button onclick="performSearch()">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-        </div>
-        <div class="back-button" onclick="showPage('home-page')">
-            <i class="fa-solid fa-arrow-left"></i>
-        </div>
-    </div>
-    <div id="cart-page" class="content-box hidden">
-        <div align="center" style="margin-top: 50px;">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <p>Lựa cuốn sách mà em guộc thích nhé <i class="fa-solid fa-face-smile-beam"></i></p>
-        </div>
-        <div class="back-button" onclick="showPage('home-page')">
-            <i class="fa-solid fa-arrow-left"></i>
-        </div>
-    </div>
+
+    <footer>© 2026 3ATBook - Chúc em tìm được cuốn sách ưng ý!</footer>
+
     <script>
-        let isLoggedIn = false;
+        /* --- DỮ LIỆU SÁCH MẪU --- */
+        const allBooks = [
+            { id: 1, title: "Nhật ký thức ăn", price: 85000, genre: "Kỹ năng", img: "https://marketplace.canva.com/EAD5DLrZ1DE/1/0/1024w/canva-xanh-m%C3%B2ng-k%C3%A9t-v%C3%A0-h%E1%BB%93ng-b%C3%A1nh-donut-th%E1%BB%A9c-%C4%83n-nh%E1%BA%ADt-k%C3%BD-s%C3%A1ch-b%C3%ACa-Zlr77mT-27w.jpg" },
+            { id: 2, title: "Harry Potter & Bảo Bối Tử Thần", price: 245000, genre: "Fantasy", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvs-dmZnbL-2wgx3MMJYeISinumkrLC2JAVg&s" },
+            { id: 3, title: "Chú chim tí hon", price: 45000, genre: "Thiếu nhi", img: "https://marketplace.canva.com/EAD5HAtO1ec/1/0/1003w/canva-v%C3%A0ng-n%C3%A2u-chim-h%C3%ACnh-minh-h%E1%BB%8Da-nh%E1%BB%8F-b%C3%A9-tr%E1%BA%BB-em-s%C3%A1ch-b%C3%ACa-cptvdrYhx3Y.jpg" },
+            { id: 4, title: "Việt Nam Sử Lược", price: 120000, genre: "Lịch sử", img: "https://cdn2.tuoitre.vn/thumb_w/730/471584752817336320/2024/1/12/ttctso214-1p33ab-17050432862411016551117.jpg" },
+            { id: 5, title: "Hãy Nhớ Tên Anh Ấy", price: 95000, genre: "Văn học", img: "https://marketplace.canva.com/EAD46HNrYBs/1/0/1003w/canva-an-%E1%BB%A7i-l%C3%A3ng-m%E1%BA%A1n-s%C3%A1ch-b%C3%ACa-naZIEWMJArU.jpg" },
+            { id: 6, title: "Hoàng Tử Bé", price: 75000, genre: "Văn học", img: "https://images.tuyensinh247.com/picture/images_question/1664871886-pxlm.jpg" },
+            { id: 7, title: "Phía trên những ngọn cây", price: 110000, genre: "Fantasy", img: "https://marketplace.canva.com/EAD479TtFJc/1/0/1003w/canva-%C4%91en-%E1%BA%A3nh-n%C3%A2ng-l%C3%AAn-b%C3%ACa-s%C3%A1ch-eNGqNf1VzO0.jpg" },
+            { id: 8, title: "Tôi thấy hoa vàng trên cỏ xanh", price: 125000, genre: "Văn học", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST0kxN6T39KunuTr4N-BCxo1V5-W55tNUImw&s" }
+        ];
 
-        function showPage(pageId) {
-            let allPages = document.querySelectorAll('.content-box');
-            allPages.forEach(page => { page.classList.add('hidden'); });
-            document.getElementById(pageId).classList.remove('hidden');
-            if (pageId === 'account-page') {
-                if (isLoggedIn) {
-                    // Nếu đã đăng nhập: Hiện hồ sơ, ẩn login và register
-                    document.getElementById('profile-section').classList.remove('hidden');
-                    document.getElementById('login-section').classList.add('hidden');
-                    document.getElementById('register-section').classList.add('hidden');
-                } else {
-                    // Nếu chưa đăng nhập: Hiện form login
-                    toggleAuth('login');
-                    document.getElementById('profile-section').classList.add('hidden');
-                }
-            }
+        let cart = [];
+        let currentUser = JSON.parse(localStorage.getItem('user'));
+
+        window.onload = () => {
+            renderGrid('newBooksGrid', [...allBooks].reverse());
+            renderGrid('hotBooksGrid', allBooks);
+            updateCartBadge();
+        };
+
+        /* --- CÁC HÀM XỬ LÝ GIAO DIỆN --- */
+
+        // Hàm chuyển đổi giữa các trang (Home, Search, Account, Cart)
+        function showPage(id) {
+            document.querySelectorAll('main').forEach(p => p.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById('search-overlay').style.display = 'none'; // Đóng tìm kiếm khi chuyển trang
+            if (id === 'cart-page') renderCart();
         }
-        function performSearch() {
-            let val = document.getElementById('searchInput').value;
-            if (val) {
-                alert("Đang tìm sách: " + val);
-            } else {
-                alert("Chưa nhập gì mà em guộc!");
-            }
+
+        // Quay về trang chủ
+        function resetHome() { showPage('home-page'); }
+
+        // Bật/tắt thanh tìm kiếm
+        function toggleSearchBar() {
+            const bar = document.getElementById('search-overlay');
+            const isHidden = bar.style.display === 'none' || bar.style.display === '';
+            bar.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) document.getElementById('liveSearch').focus();
         }
-        // chuyển đổi trang đăng nhập và đăng ký
-        function toggleAuth(type) {
-            if (type === 'register') {
+
+        // Tìm kiếm tức thì (Live Search)
+        function handleLiveSearch(val) {
+            val = val.toLowerCase().trim();
+            if (!val) { resetHome(); return; }
+            if (document.getElementById('search-page').classList.contains('hidden')) {
+                showPage('search-page');
+                document.getElementById('search-overlay').style.display = 'block'; // Giữ thanh tìm kiếm khi đang gõ
+            }
+            document.getElementById('searchTitle').innerText = `Đang tìm: "${val}"`;
+            renderGrid('searchBooksGrid', allBooks.filter(b => b.title.toLowerCase().includes(val)));
+        }
+
+        // Hiển thị danh sách sách theo lưới
+        function renderGrid(id, list) {
+            document.getElementById(id).innerHTML = list.map(b => `
+                    <div class="book-card">
+                        <img src="${b.img}">
+                        <div class="book-title">${b.title}</div>
+                        <div class="book-price">${b.price.toLocaleString()}đ</div>
+                        <button class="btn-add" onclick="addToCart(${b.id})">Thêm vào giỏ</button>
+                    </div>
+                `).join('');
+        }
+
+        /* --- HỆ THỐNG GIỎ HÀNG --- */
+
+        function addToCart(id) {
+            const book = allBooks.find(b => b.id === id);
+            const exist = cart.find(i => i.id === id);
+            if (exist) exist.qty++;
+            else cart.push({ ...book, qty: 1 });
+            updateCartBadge();
+            alert(`Đã thêm "${book.title}" vào giỏ hàng!`);
+        }
+
+        function updateCartBadge() {
+            const count = cart.reduce((total, item) => total + item.qty, 0);
+            document.getElementById('cartCount').innerText = count;
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cartList');
+            let total = 0;
+            if (cart.length === 0) { list.innerHTML = "<p align='center' style='padding:20px'>Giỏ hàng của bạn đang trống.</p>"; document.getElementById('cartTotal').innerText = ""; return; }
+            list.innerHTML = cart.map(item => {
+                total += item.price * item.qty;
+                return `<div class="cart-row">
+                        <img src="${item.img}">
+                        <div style="flex:1">
+                            <h4 style="margin:0">${item.title}</h4>
+                            <p style="color:var(--primary); font-weight:bold; margin:5px 0">${item.price.toLocaleString()}đ</p>
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                                <span style="font-weight:bold">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>`;
+            }).join('');
+            document.getElementById('cartTotal').innerText = `Tổng tiền: ${total.toLocaleString()}đ`;
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            renderCart();
+            updateCartBadge();
+        }
+
+        /* --- HỆ THỐNG TÀI KHOẢN --- */
+
+        function showAuthPage() {
+            showPage('account-page');
+            if (currentUser) {
+                document.getElementById('profile-section').classList.remove('hidden');
                 document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('register-section').classList.remove('hidden');
+                document.getElementById('prof-name').innerText = currentUser.name;
+                document.getElementById('prof-email').innerText = currentUser.email;
             } else {
-                document.getElementById('register-section').classList.add('hidden');
-                document.getElementById('login-section').classList.remove('hidden');
-
+                toggleAuth('login');
             }
         }
-        //đăng nhập
-        function Login(event) {
-            if (!event.target.form.checkValidity()) {
-                return;
-            }
-            event.preventDefault();
-            // Lấy giá trị user nhập vào ô input
-            let emailDangnhap = document.getElementById("user-email").value;
-            let matkhauDangnhap = document.getElementById("user-matkhau").value;
-            // Lấy giá trị ĐÃ LƯU lúc đăng ký (Key phải khớp với hàm Registr bên dưới)
-            let emailDaluu = localStorage.getItem("reg-email");
-            let matkhauDaluu = localStorage.getItem("reg-matkhau");
-            if (emailDangnhap === emailDaluu && matkhauDangnhap === matkhauDaluu) {
-                alert("Đăng nhập thành công!");
-                isLoggedIn = true;
-                // 1. Lấy dữ liệu từ máy lên để hiển thị vào hồ sơ
-                document.getElementById("prof-hoten").innerText = localStorage.getItem("hoten");
-                document.getElementById("prof-mssv").innerText = localStorage.getItem("mssv");
-                document.getElementById("prof-ngaysinh").innerText = localStorage.getItem("ngaysinh");
-                document.getElementById("prof-email").innerText = localStorage.getItem("email");
 
-                // 2. Ẩn form đăng nhập và hiện hồ sơ
-                document.getElementById("login-section").classList.add("hidden");
-                document.getElementById("profile-section").classList.remove("hidden");
-                showPage('account-page');
-
-            }
-            else {
-                alert("Email hoặc mật khẩu không chính xác.Vui lòng nhập lại!");
-            }
+        function toggleAuth(type) {
+            document.getElementById('login-section').classList.toggle('hidden', type !== 'login');
+            document.getElementById('register-section').classList.toggle('hidden', type !== 'register');
+            document.getElementById('profile-section').classList.add('hidden');
         }
-        //đăng ký
-        function Register(event) {
-            const form = document.getElementById('register-section');
-            if (!form.checkValidity()) {
-                return;
-            }
-            event.preventDefault();
-            let name = document.getElementById("hoten").value;
-            let studentID = document.getElementById("mssv").value;
-            let ngaysinh = document.getElementById("ngaysinh").value;
-            let email = document.getElementById("email").value;
-            let matkhau = document.getElementById("matkhau").value;
-            let matkhau1 = document.getElementById("matkhau1").value;
-            if (matkhau !== matkhau1) {
-                alert("Mật khẩu nhập lại không khớp, vui lòng nhập lại!");
-                return;
-            }
-            localStorage.setItem("hoten", name);
-            localStorage.setItem("mssv", studentID);
-            localStorage.setItem("ngaysinh", ngaysinh);
-            localStorage.setItem("email", email);
-            localStorage.setItem("matkhau", matkhau);
-            localStorage.setItem("matkhau1", matkhau1);
-            alert("Đã đăng ký thành công tài khoản: " + name);
+
+        // Đăng xuất và Xóa trắng hồ sơ (Khắc phục lỗi hiển thị thông tin cũ)
+        function handleLogout() {
+            localStorage.removeItem('user');
+            currentUser = null;
+            document.getElementById('prof-name').innerText = '';
+            document.getElementById('prof-email').innerText = '';
+            alert("Đã đăng xuất tài khoản!");
+            resetHome();
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            const saved = JSON.parse(localStorage.getItem('user'));
+            if (saved && saved.email === email && saved.pass === pass) { currentUser = saved; showAuthPage(); }
+            else alert('Thông tin đăng nhập không chính xác!');
+        }
+
+        function handleRegister() {
+            const pass = document.getElementById('reg-pass').value;
+            const passConfirm = document.getElementById('reg-pass-confirm').value;
+
+            if (pass !== passConfirm) return alert("Mật khẩu nhập lại không khớp!");
+
+            const user = {
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                pass: pass
+            };
+            if (!user.name || !user.email) return alert("Vui lòng nhập đầy đủ thông tin!");
+            localStorage.setItem('user', JSON.stringify(user));
+            alert('Đăng ký tài khoản thành công!');
             toggleAuth('login');
         }
-        //Đăng xuất
-        function Logout() {
-            isLoggedIn = false; // Đánh dấu đã thoát
-            toggleAuth('login'); // Quay về form đăng nhập
-            showPage('account-page'); // Refresh lại trang account
+
+        /* --- CÁC TIỆN ÍCH KHÁC --- */
+
+        // Xử lý Góp ý (Xóa nội dung sau khi gửi)
+        function sendGopY() {
+            const txt = document.getElementById('gopy-text').value;
+            if (!txt.trim()) return alert("Vui lòng nhập nội dung!");
+            alert("Cảm ơn góp ý của bạn!");
+            document.getElementById('gopy-text').value = "";
+        }
+
+        // Di chuyển đến các mục trên Trang chủ
+        function navToSection(id) {
+            resetHome();
+            setTimeout(() => { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }, 150);
+        }
+
+        // Thanh toán ảo
+        function processPayment() {
+            if (cart.length === 0) return alert("Giỏ hàng trống!");
+            alert('Thanh toán thành công!');
+            cart = [];
+            updateCartBadge();
+            resetHome();
+        }
+
+        // Lọc sách theo thể loại
+        function filterByGenre(genre) {
+            showPage('search-page');
+            document.getElementById('searchTitle').innerText = `Thể loại: ${genre}`;
+            renderGrid('searchBooksGrid', allBooks.filter(b => b.genre === genre));
         }
     </script>
 </body>
