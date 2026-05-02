@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
@@ -16,10 +16,10 @@
             --gray: #64748b;
         }
 
-        /* Cấu trúc Flexbox để Footer luôn dính sát đáy trang khi nội dung ít */
         html, body {
             height: 100%;
             margin: 0;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -369,7 +369,7 @@
                 </div>
             </div>
             <nav>
-                <div class="container">
+                <div id="home-page" class="container">
                     <ul class="nav-menu">
                         <li><a onclick="resetHome()">Trang chủ</a></li>
                         <li><a onclick="navToSection('sach-moi')">Sách mới</a></li>
@@ -381,7 +381,7 @@
             </nav>
         </header>
 
-        <main id="home-page" class="page-section">
+        <main class="page-section">
             <section id="sach-moi" class="section-box">
                 <div class="container">
                     <div class="section-header"><h2>Sách Mới Cập Nhật</h2></div>
@@ -530,13 +530,13 @@
         // Hiển thị danh sách sách theo lưới
         function renderGrid(id, list) {
             document.getElementById(id).innerHTML = list.map(b => `
-                    <div class="book-card">
-                        <img src="${b.img}">
-                        <div class="book-title">${b.title}</div>
-                        <div class="book-price">${b.price.toLocaleString()}đ</div>
-                        <button class="btn-add" onclick="addToCart(${b.id})">Thêm vào giỏ</button>
-                    </div>
-                `).join('');
+                        <div class="book-card">
+                            <img src="${b.img}">
+                            <div class="book-title">${b.title}</div>
+                            <div class="book-price">${b.price.toLocaleString()}đ</div>
+                            <button class="btn-add" onclick="addToCart(${b.id})">Thêm vào giỏ</button>
+                        </div>
+                    `).join('');
         }
 
         /* --- HỆ THỐNG GIỎ HÀNG --- */
@@ -562,17 +562,17 @@
             list.innerHTML = cart.map(item => {
                 total += item.price * item.qty;
                 return `<div class="cart-row">
-                        <img src="${item.img}">
-                        <div style="flex:1">
-                            <h4 style="margin:0">${item.title}</h4>
-                            <p style="color:var(--primary); font-weight:bold; margin:5px 0">${item.price.toLocaleString()}đ</p>
-                            <div class="qty-control">
-                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                                <span style="font-weight:bold">${item.qty}</span>
-                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                            <img src="${item.img}">
+                            <div style="flex:1">
+                                <h4 style="margin:0">${item.title}</h4>
+                                <p style="color:var(--primary); font-weight:bold; margin:5px 0">${item.price.toLocaleString()}đ</p>
+                                <div class="qty-control">
+                                    <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                                    <span style="font-weight:bold">${item.qty}</span>
+                                    <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
+                        </div>`;
             }).join('');
             document.getElementById('cartTotal').innerText = `Tổng tiền: ${total.toLocaleString()}đ`;
         }
